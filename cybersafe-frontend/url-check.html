@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Phishing Checker | CyberSafe</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+<div id="gold-particles"></div>
+<!-- NAVBAR -->
+<header class="navbar">
+    <div class="logo">CyberSafe</div>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="#services">Services</a>
+        <a href="#">Contact</a>
+    </nav>
+</header>
+
+<section class="tool-container">
+
+    <div class="glass-card">
+        <h2 class="title">🔍 URL Phishing Checker</h2>
+        <p class="subtitle">Check if a link is safe or suspicious.</p>
+
+        <input id="urlInput" type="text" class="input-field" placeholder="https://example.com">
+        <button id="scanBtn" class="btn-primary">Scan URL</button>
+
+        <div id="result" class="result-box"></div>
+    </div>
+
+    <div class="warning-box">
+        <h3>⚠ Safety Warning</h3>
+        <ul>
+            <li>Never click suspicious links.</li>
+            <li>Check website spelling carefully.</li>
+            <li>Avoid downloading files from unknown links.</li>
+            <li>Use HTTPS only.</li>
+        </ul>
+    </div>
+
+</section>
+
+<script>
+document.getElementById("scanBtn").addEventListener("click", async () => {
+    const url = document.getElementById("urlInput").value.trim();
+    const result = document.getElementById("result");
+
+    if (!url) {
+        result.innerHTML = `<div class="alert-error">❗ Please enter a valid URL</div>`;
+        return;
+    }
+
+    result.innerHTML = `<div class="loading-box">⏳ Scanning URL...</div>`;
+
+    try {
+        const response = await fetch("http://localhost:8080/api/phish-check", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ url: url })
+        });
+
+        const data = await response.json();
+
+        let badgeColor = "#6c757d";
+        if (data.status === "Safe") badgeColor = "#28a745";
+        else if (data.status === "Suspicious") badgeColor = "#f0ad4e";
+        else badgeColor = "#dc3545";
+
+        let html = `
+            <div class="result-card">
+                <span class="status-badge" style="background:${badgeColor}">
+                    ${data.status}
+                </span>
+
+                <p class="url-line"><strong>🔗 URL:</strong> ${data.url}</p>
+        `;
+
+        if (data.reasons?.length > 0) {
+            html += `
+                <div class="reason-box">
+                    <h4>⚠ Why flagged:</h4>
+                    <ul>${data.reasons.map(r => `<li>• ${r}</li>`).join("")}</ul>
+                </div>
+            `;
+        }
+
+        if (data.virusTotal) {
+            const v = data.virusTotal;
+            html += `
+                <div class="vt-box">
+                    <h4>🧪 VirusTotal Summary</h4>
+                    <p><strong>Verdict:</strong> ${v.verdict}</p>
+                    <p>🟢 Harmless: ${v.harmless}</p>
+                    <p>🟡 Suspicious: ${v.suspicious}</p>
+                    <p>🔴 Malicious: ${v.malicious}</p>
+                </div>
+            `;
+        }
+
+        html += `</div>`;
+
+        result.innerHTML = html;
+
+    } catch (error) {
+        result.innerHTML = `<div class="alert-error">❗ Backend not reachable</div>`;
+    }
+});
+</script>
+
+</body>
+</html>
+<script>
+    const particleContainer = document.getElementById("gold-particles");
+
+    function createParticle() {
+        const particle = document.createElement("span");
+        particle.classList.add("particle");
+
+        const size = Math.random() * 6 + 3; 
+        particle.style.width = size + "px";
+        particle.style.height = size + "px";
+        particle.style.left = Math.random() * 100 + "vw";
+        particle.style.bottom = "-20px";
+
+        particle.style.animationDuration = (Math.random() * 6 + 6) + "s";
+
+        particleContainer.appendChild(particle);
+
+        setTimeout(() => particle.remove(), 12000);
+    }
+
+    setInterval(createParticle, 250);
+</script>
+
