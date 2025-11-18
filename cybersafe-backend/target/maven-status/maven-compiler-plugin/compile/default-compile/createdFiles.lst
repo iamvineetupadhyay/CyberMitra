@@ -1,0 +1,5 @@
+com\cybersafe\controller\PasswordController.class
+com\cybersafe\CybersafeApplication.class
+com\cybersafe\service\VirusTotalService.class
+com\cybersafe\service\PhishingListService.class
+com\cybersafe\controller\PhishingController.class
