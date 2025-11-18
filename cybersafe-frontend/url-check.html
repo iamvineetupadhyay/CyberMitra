@@ -56,7 +56,7 @@ document.getElementById("scanBtn").addEventListener("click", async () => {
     result.innerHTML = `<div class="loading-box">⏳ Scanning URL...</div>`;
 
     try {
-        const response = await fetch("http://localhost:8080/api/phish-check", {
+        const response = await fetch("https://cybermitra-production.up.railway.app/api/phish-check", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ url: url })
