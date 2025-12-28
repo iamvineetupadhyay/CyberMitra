@@ -31,7 +31,7 @@ public class PhishingController {
             "deadline","risk","critical","tap here","visit link","open link","download","install",
             "access","continue","proceed","unsubscribe","opt-out","package","shipment","delivery failed",
             "tracking","order update","courier","parcel","reschedule","subscribe","exclusive","upgrade",
-            "best price","offer ends soon","ieccet.edu.in"
+            "best price","offer ends soon"
     );
 
     @PostMapping
